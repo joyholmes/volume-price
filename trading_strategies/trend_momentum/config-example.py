@@ -1,50 +1,103 @@
+"""
+注意：请勿修改此文件中的注释说明，这些注释用于说明参数的具体含义和影响。
+如果需要修改参数值，请直接修改参数值即可，保持注释不变。
+"""
+
 class TrendMomentumConfig:
     """趋势动量策略配置"""
     
     # Tushare配置
-    TUSHARE_TOKEN = "your_token_here"
+    TUSHARE_TOKEN = "your_token_here"  # Tushare API令牌，用于获取数据，请替换为您的token
     
     # 交易品种配置
-    SYMBOL = "512880.SH"        # 证券ETF
-    SYMBOL_NAME = "证券ETF"
-    INDEX_SYMBOL = "399975.SZ"  # 证券公司指数
+    SYMBOL = "512880.SH"        # 主交易品种代码，支持股票/ETF/指数
+    SYMBOL_NAME = "证券ETF"      # 交易标的名称，用于结果展示
+    INDEX_SYMBOL = "399975.SZ"  # 对应板块指数，用于市场趋势判断
     
     # 回测时间配置
-    START_DATE = "2023-01-01"
-    END_DATE = "2024-12-31"
+    START_DATE = "2023-01-01"   # 回测起始日期，格式：YYYY-MM-DD
+    END_DATE = "2024-12-31"     # 回测结束日期，格式：YYYY-MM-DD
     
     # 资金配置
-    INITIAL_CAPITAL = 1000000   # 初始资金100万
+    INITIAL_CAPITAL = 1000000   # 初始资金，单位：元，影响每次交易的资金量
     
     # 趋势参数
-    FAST_MA = 5                 # 快速均线周期
-    MID_MA = 20                 # 中期均线周期
-    SLOW_MA = 60               # 慢速均线周期
+    FAST_MA = 5                 # 快速均线周期，范围[3-10]
+                                # 用于捕捉短期趋势变化
+                                # 较小值对价格变化更敏感
+    
+    MID_MA = 20                 # 中期均线周期，范围[15-30]
+                                # 用于确认中期趋势
+                                # 建议是快速均线的3-5倍
+    
+    SLOW_MA = 60               # 慢速均线周期，范围[40-120]
+                               # 用于判断长期趋势
+                               # 建议是中期均线的2-4倍
     
     # 动量参数
-    ROC_PERIOD = 5             # 变化率周期
-    RSI_PERIOD = 14            # RSI周期
-    MACD_FAST = 12            # MACD快线
-    MACD_SLOW = 26            # MACD慢线
-    MACD_SIGNAL = 9           # MACD信号线
+    ROC_PERIOD = 5             # 变化率指标周期，范围[3-10]
+                               # 衡量短期价格动量
+                               # 较小值对价格变化更敏感
+    
+    RSI_PERIOD = 14            # RSI指标周期，范围[9-25]
+                               # 衡量超买超卖
+                               # 标准值14，可适当调整
+    
+    MACD_FAST = 12            # MACD快线周期，范围[8-15]
+                               # 影响MACD对趋势的敏感度
+                               # 标准值12，可适当调整
+    
+    MACD_SLOW = 26            # MACD慢线周期，范围[20-30]
+                               # 影响MACD的趋势确认
+                               # 标准值26，可适当调整
+    
+    MACD_SIGNAL = 9           # MACD信号线周期，范围[7-12]
+                               # 影响MACD交叉信号的产生
+                               # 标准值9，可适当调整
     
     # 波动率参数
-    ATR_PERIOD = 14           # ATR周期
-    VOLATILITY_MA = 20        # 波动率均线周期
+    ATR_PERIOD = 14           # ATR周期，范围[10-20]
+                               # 衡量市场波动性
+                               # 较大值波动率更平滑
+    
+    VOLATILITY_MA = 20        # 波动率均线周期，范围[15-30]
+                               # 用于判断波动率趋势
+                               # 建议大于ATR周期
     
     # 仓位控制
-    MAX_POSITIONS = 1.0       # 最大仓位
-    INITIAL_POSITION = 0.3    # 初始建仓仓位
-    POSITION_STEP = 0.2       # 加仓步长
+    MAX_POSITIONS = 1.0       # 最大仓位比例，范围[0.1-1.0]
+                               # 控制最大持仓上限
+                               # 可根据风险偏好调整
+    
+    INITIAL_POSITION = 0.3    # 初始建仓仓位，范围[0.1-0.5]
+                               # 首次建仓的仓位比例
+                               # 建议在波动大时调小
+    
+    POSITION_STEP = 0.2       # 加仓步长，范围[0.1-0.3]
+                               # 每次加仓的仓位增加比例
+                               # 建议根据波动性调整
     
     # 止损参数
-    FIXED_STOP_LOSS = 0.05    # 固定止损比例
-    TRAILING_STOP = 0.08      # 追踪止损比例
+    FIXED_STOP_LOSS = 0.05    # 固定止损比例，范围[0.03-0.10]
+                               # 相对建仓价的止损幅度
+                               # 可根据标的波动性调整
+    
+    TRAILING_STOP = 0.08      # 追踪止损比例，范围[0.05-0.15]
+                               # 相对最高价的止损幅度
+                               # 建议大于固定止损
     
     # 信号阈值
-    TREND_THRESHOLD = 0.02    # 趋势确认阈值
-    RSI_OVERSOLD = 30        # RSI超卖阈值
-    RSI_OVERBOUGHT = 70      # RSI超买阈值
+    TREND_THRESHOLD = 0.02    # 趋势确认阈值，范围[0.01-0.05]
+                               # 判断趋势强度的标准
+                               # 较小值更容易确认趋势
+    
+    RSI_OVERSOLD = 30        # RSI超卖阈值，范围[20-40]
+                               # 用于判断超卖
+                               # 标准值30，可适当调整
+    
+    RSI_OVERBOUGHT = 70      # RSI超买阈值，范围[60-80]
+                               # 用于判断超买
+                               # 标准值70，可适当调整
     
     # 输出配置
-    OUTPUT_DIR = "backtest_results" 
+    OUTPUT_DIR = "backtest_results"  # 回测结果保存目录 

@@ -1,30 +1,53 @@
+"""
+注意：请勿修改此文件中的注释说明，这些注释用于说明参数的具体含义和影响。
+如果需要修改参数值，请直接修改参数值即可，保持注释不变。
+"""
+
 class Config:
     # Tushare配置
-    TUSHARE_TOKEN = "your_token_here"
+    TUSHARE_TOKEN = "your_token_here"  # Tushare API令牌，用于获取数据，请替换为您的token
     
     # 交易品种配置
-    SYMBOL = "512880.SH"        # 证券ETF
-    SYMBOL_NAME = "证券ETF"
+    SYMBOL = "000688.SH"        # 交易标的代码，支持股票/ETF/指数
+    SYMBOL_NAME = "科创50ETF"    # 交易标的名称，用于结果展示
     
     # 回测时间配置
-    START_DATE = "2023-01-01"
-    END_DATE = "2024-12-31"
+    START_DATE = "2023-01-01"   # 回测起始日期，格式：YYYY-MM-DD
+    END_DATE = "2024-12-31"     # 回测结束日期，格式：YYYY-MM-DD
     
     # 资金配置
-    INITIAL_CAPITAL = 1000000   # 初始资金100万
+    INITIAL_CAPITAL = 1000000   # 初始资金，单位：元，影响每次交易的资金量
     
     # 量价比策略参数
-    VOL_PRICE_RATIO_PERIOD = 3     # 进一步缩短，提高灵敏度
-    VOL_MA_PERIOD = 3              # 与量价比周期保持一致
-    PRICE_MA_PERIOD = 8            # 短期价格趋势
+    VOL_PRICE_RATIO_PERIOD = 3  # 量价比计算周期，范围[2-10]
+                                # 较小值(2-3)对短期变化更敏感，交易更频繁
+                                # 较大值(8-10)更稳定，降低交易频率
+    
+    VOL_MA_PERIOD = 3          # 成交量均线周期，范围[2-10]
+                               # 建议与量价比周期保持一致
+                               # 影响成交量趋势判断的灵敏度
+    
+    PRICE_MA_PERIOD = 8        # 价格均线周期，范围[5-20]
+                               # 较小值更容易捕捉短期趋势
+                               # 较大值可以过滤短期波动
     
     # 信号阈值
-    OVERSOLD_THRESHOLD = 0.92      # 略微放宽买入条件
-    OVERBOUGHT_THRESHOLD = 1.5     # 大幅提高卖出阈值，避免过早卖出
+    OVERSOLD_THRESHOLD = 0.92  # 超卖阈值，范围[0.8-0.95]
+                               # 越大越容易触发买入信号
+                               # 建议在震荡市调大，趋势市调小
+    
+    OVERBOUGHT_THRESHOLD = 1.5 # 超买阈值，范围[1.2-2.0]
+                               # 越大越不容易触发卖出信号
+                               # 建议在趋势市调大，震荡市调小
     
     # 仓位控制
-    POSITION_SIZE = 0.5            # 首次建仓比例
-    MAX_POSITIONS = 1              # 最大仓位保持不变
+    POSITION_SIZE = 0.5        # 单次建仓比例，范围[0.1-1.0]
+                               # 影响单次买入的资金量
+                               # 建议根据标的波动性调整
+    
+    MAX_POSITIONS = 1          # 最大仓位比例，范围[0.1-1.0]
+                               # 控制最大持仓上限
+                               # 可根据风险偏好调整
     
     # 输出配置
-    OUTPUT_DIR = "backtest_results" 
+    OUTPUT_DIR = "backtest_results"  # 回测结果保存目录 
